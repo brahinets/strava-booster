@@ -2,11 +2,11 @@ package statistic
 
 import (
 	"math"
-	"strava-booster/activity"
+	a "strava-booster/activity"
 	"time"
 )
 
-func CountUniqueDays(activities []activity.Activity) int {
+func CountUniqueDays(activities []a.Activity) int {
 	uniqueDays := make(map[time.Time]bool)
 
 	for _, activity := range activities {
@@ -16,7 +16,7 @@ func CountUniqueDays(activities []activity.Activity) int {
 	return len(uniqueDays)
 }
 
-func CalculateTotalDuration(activities []activity.Activity) time.Duration {
+func CalculateTotalDuration(activities []a.Activity) time.Duration {
 	var totalDuration time.Duration
 
 	for _, activity := range activities {
@@ -26,7 +26,7 @@ func CalculateTotalDuration(activities []activity.Activity) time.Duration {
 	return totalDuration
 }
 
-func CalculateTotalDistance(activities []activity.Activity) float64 {
+func CalculateTotalDistance(activities []a.Activity) float64 {
 	var totalDistance float64
 
 	for _, activity := range activities {
@@ -36,8 +36,8 @@ func CalculateTotalDistance(activities []activity.Activity) float64 {
 	return totalDistance
 }
 
-func FindShortestRun(activities []activity.Activity) activity.Activity {
-	var shortestRun activity.Activity
+func FindShortestRun(activities []a.Activity) a.Activity {
+	var shortestRun a.Activity
 	shortestDistance := math.MaxFloat64
 
 	for _, activity := range activities {
@@ -50,8 +50,8 @@ func FindShortestRun(activities []activity.Activity) activity.Activity {
 	return shortestRun
 }
 
-func FindFarthestRun(activities []activity.Activity) activity.Activity {
-	var farthestRun activity.Activity
+func FindFarthestRun(activities []a.Activity) a.Activity {
+	var farthestRun a.Activity
 	farthestDistance := 0.0
 
 	for _, activity := range activities {
