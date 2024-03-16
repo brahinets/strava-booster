@@ -15,7 +15,10 @@ func ReadActivities(activitiesFile string) []Activity {
 		fmt.Println("Error:", err)
 		return nil
 	}
-	defer file.Close()
+
+	defer func() {
+		_ = file.Close()
+	}()
 
 	r := csv.NewReader(file)
 	records, err := r.ReadAll()
