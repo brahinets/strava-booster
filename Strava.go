@@ -38,8 +38,8 @@ func countUniqueDays(activities []Activity) int {
 	return len(uniqueDays)
 }
 
-func formatDistance(distanceMeters float64) string {
-	return fmt.Sprintf("%.2fkm", distanceMeters)
+func formatDistance(distanceKilometers float64) string {
+	return fmt.Sprintf("%.2fkm", distanceKilometers)
 }
 
 func calculateTotalDuration(activities []Activity) time.Duration {
