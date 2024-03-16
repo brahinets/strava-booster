@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -12,10 +13,81 @@ import (
 func main() {
 	activities := ReadActivities("activities.csv")
 
+	numDays := countUniqueDays(activities)
+	numRuns := len(activities)
+	totalDuration := calculateTotalDuration(activities)
+	totalDistance := calculateTotalDistance(activities)
+	shortestRun := findShortestRun(activities)
+	farthestRun := findFarthestRun(activities)
+
+	fmt.Println("# of Days:", numDays)
+	fmt.Println("# of Runs:", numRuns)
+	fmt.Println("Total Duration:", totalDuration)
+	fmt.Println("Total Distance:", formatDistance(totalDistance))
+	fmt.Println("Shortest Run:", formatDistance(shortestRun.Distance))
+	fmt.Println("Farthest Run:", formatDistance(farthestRun.Distance))
+}
+
+func countUniqueDays(activities []Activity) int {
+	uniqueDays := make(map[time.Time]bool)
+
 	for _, activity := range activities {
-		fmt.Printf("Sport: %s, Date: %s, Title: %s, Time: %s, Distance: %.2f km, Elevation: %d m, Effort: %d\n",
-			activity.Sport, activity.Date, activity.Title, activity.Time, activity.Distance, activity.Elevation, activity.Effort)
+		uniqueDays[activity.Date.Truncate(24*time.Hour)] = true
 	}
+
+	return len(uniqueDays)
+}
+
+func formatDistance(distanceMeters float64) string {
+	return fmt.Sprintf("%.2fkm", distanceMeters)
+}
+
+func calculateTotalDuration(activities []Activity) time.Duration {
+	var totalDuration time.Duration
+
+	for _, activity := range activities {
+		totalDuration += activity.Time
+	}
+
+	return totalDuration
+}
+
+func calculateTotalDistance(activities []Activity) float64 {
+	var totalDistance float64
+
+	for _, activity := range activities {
+		totalDistance += activity.Distance
+	}
+
+	return totalDistance
+}
+
+func findShortestRun(activities []Activity) Activity {
+	var shortestRun Activity
+	shortestDistance := math.MaxFloat64
+
+	for _, activity := range activities {
+		if activity.Distance < shortestDistance {
+			shortestRun = activity
+			shortestDistance = activity.Distance
+		}
+	}
+
+	return shortestRun
+}
+
+func findFarthestRun(activities []Activity) Activity {
+	var farthestRun Activity
+	farthestDistance := 0.0
+
+	for _, activity := range activities {
+		if activity.Distance > farthestDistance {
+			farthestRun = activity
+			farthestDistance = activity.Distance
+		}
+	}
+
+	return farthestRun
 }
 
 type Activity struct {
