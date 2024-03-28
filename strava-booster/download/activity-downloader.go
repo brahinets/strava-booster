@@ -3,6 +3,7 @@ package download
 import (
 	"encoding/json"
 	"log"
+	"math"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -12,8 +13,16 @@ import (
 func Activities(from time.Time, auth string) []ActivityEntity {
 	var activities []ActivityEntity
 
-	page := downloadPage(from, 1, auth)
+	var currentPage = 1
+	page := downloadPage(from, currentPage, auth)
 	activities = append(activities, page.Activities...)
+
+	var totalPages = int(math.Ceil(float64(page.Total) / float64(page.PerPage)))
+	for currentPage < totalPages {
+		currentPage++
+		page := downloadPage(from, currentPage, auth)
+		activities = append(activities, page.Activities...)
+	}
 
 	return activities
 }
