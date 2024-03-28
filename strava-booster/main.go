@@ -29,6 +29,7 @@ func runAnalytics(activities []activity.Activity) {
 	shortestRun := statistic.FindShortestRun(activities)
 	farthestRun := statistic.FindFarthestRun(activities)
 
+	fmt.Println("----------------")
 	fmt.Println("# of Days:", numDays)
 	fmt.Println("# of Runs:", numRuns)
 	fmt.Println("Total Duration:", totalDuration)

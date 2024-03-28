@@ -2,6 +2,7 @@ package download
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math"
 	"net/http"
@@ -16,14 +17,13 @@ func Activities(from time.Time, auth string) []ActivityEntity {
 	var hasData = true
 	var currentPage = 1
 
-	log.Printf("Downloading activities...")
+	fmt.Printf("Downloading activities since %s...\n", from.Format("2006-01-02"))
 	for hasData == true {
-		log.Printf("Page %d", currentPage)
 		page := downloadPage(from, currentPage, auth)
 		activities = append(activities, page.Activities...)
 
 		totalPages := int(math.Ceil(float64(page.Total) / float64(page.PerPage)))
-		log.Printf("Pages processed %d of %d", currentPage, totalPages)
+		fmt.Printf("Pages downloaded %d of %d\n", currentPage, totalPages)
 
 		hasData = currentPage < totalPages
 		currentPage++
