@@ -16,11 +16,15 @@ func Activities(from time.Time, auth string) []ActivityEntity {
 	var hasData = true
 	var currentPage = 1
 
+	log.Printf("Downloading activities...")
 	for hasData == true {
+		log.Printf("Page %d", currentPage)
 		page := downloadPage(from, currentPage, auth)
 		activities = append(activities, page.Activities...)
 
 		totalPages := int(math.Ceil(float64(page.Total) / float64(page.PerPage)))
+		log.Printf("Pages processed %d of %d", currentPage, totalPages)
+
 		hasData = currentPage < totalPages
 		currentPage++
 	}
