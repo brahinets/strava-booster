@@ -10,7 +10,16 @@ import (
 )
 
 func Activities(from time.Time, auth string) []ActivityEntity {
-	err, req := buildRequest(from, auth)
+	var activities []ActivityEntity
+
+	page := downloadPage(from, 1, auth)
+	activities = append(activities, page.Activities...)
+
+	return activities
+}
+
+func downloadPage(from time.Time, page int, auth string) ActivitiesPage {
+	err, req := buildRequest(from, page, auth)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -21,11 +30,11 @@ func Activities(from time.Time, auth string) []ActivityEntity {
 	var data ActivitiesPage
 	json.NewDecoder(resp.Body).Decode(&data)
 
-	return data.Activities
+	return data
 }
 
-func buildRequest(from time.Time, auth string) (error, *http.Request) {
-	stravaUrl, err := buildUrl(from)
+func buildRequest(from time.Time, page int, auth string) (error, *http.Request) {
+	stravaUrl, err := buildUrl(from, page)
 
 	req, err := http.NewRequest("GET", stravaUrl.String(), nil)
 	req.Header.Add("X-Requested-With", "XMLHttpRequest")
@@ -34,7 +43,7 @@ func buildRequest(from time.Time, auth string) (error, *http.Request) {
 	return err, req
 }
 
-func buildUrl(from time.Time) (*url.URL, error) {
+func buildUrl(from time.Time, page int) (*url.URL, error) {
 	stravaUrl, err := url.Parse("https://www.strava.com/athlete/training_activities")
 	if err != nil {
 		log.Fatal(err)
@@ -44,6 +53,7 @@ func buildUrl(from time.Time) (*url.URL, error) {
 	values.Add("start_date", from.Format("01/02/2006"))
 	values.Set("activity_type", "Run")
 	values.Set("per_page", strconv.Itoa(20))
+	values.Set("page", strconv.Itoa(page))
 
 	stravaUrl.RawQuery = values.Encode()
 
