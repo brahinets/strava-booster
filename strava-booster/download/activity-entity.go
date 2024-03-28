@@ -10,7 +10,7 @@ type ActivityEntity struct {
 	BikeID                  any     `json:"bike_id"`
 	AthleteGearID           int     `json:"athlete_gear_id"`
 	StartDate               string  `json:"start_date"`
-	StartDateLocalRaw       int     `json:"start_date_local_raw"`
+	StartDateLocalRaw       int64   `json:"start_date_local_raw"`
 	StartTime               string  `json:"start_time"`
 	StartDay                string  `json:"start_day"`
 	Distance                string  `json:"distance"`

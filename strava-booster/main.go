@@ -10,18 +10,15 @@ import (
 )
 
 func main() {
-	downloadRawData()
-
-	activities := activity.ReadActivities("../activities.csv")
+	data := downloadRawData()
+	activities := mapActivities(data)
 	runAnalytics(activities)
 }
 
-func downloadRawData() {
+func downloadRawData() []download.ActivityEntity {
 	analyticsStart := time.Date(2023, 8, 30, 0, 0, 0, 0, time.UTC)
 	sessionCookie := os.Getenv("STRAVA_SESSION_TOKEN")
-	activities := download.Activities(analyticsStart, sessionCookie)
-
-	fmt.Println("Raw Data:", activities)
+	return download.Activities(analyticsStart, sessionCookie)
 }
 
 func runAnalytics(activities []activity.Activity) {
@@ -42,4 +39,22 @@ func runAnalytics(activities []activity.Activity) {
 
 func formatDistance(distanceKilometers float64) string {
 	return fmt.Sprintf("%.2fkm", distanceKilometers)
+}
+
+func mapActivities(entities []download.ActivityEntity) []activity.Activity {
+	var activities []activity.Activity
+
+	for _, entity := range entities {
+		activities = append(activities, activity.Activity{
+			Sport:     entity.Type,
+			Date:      time.Unix(entity.StartDateLocalRaw, 0),
+			Title:     entity.Name,
+			Time:      time.Duration(entity.ElapsedTimeRaw) * time.Second,
+			Distance:  float64(entity.DistanceRaw) / 1000,
+			Elevation: int(entity.ElevationGainRaw),
+			Effort:    int(entity.SufferScore),
+		})
+	}
+
+	return activities
 }
