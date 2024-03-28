@@ -38,7 +38,10 @@ func downloadPage(from time.Time, page int, auth string) ActivitiesPage {
 	}
 
 	var data ActivitiesPage
-	json.NewDecoder(resp.Body).Decode(&data)
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	return data
 }
