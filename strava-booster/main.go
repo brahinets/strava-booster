@@ -11,7 +11,9 @@ import (
 
 func main() {
 	downloadRawData()
-	runAnalytics()
+
+	activities := activity.ReadActivities("../activities.csv")
+	runAnalytics(activities)
 }
 
 func downloadRawData() {
@@ -22,8 +24,7 @@ func downloadRawData() {
 	fmt.Println("Raw Data:", activities)
 }
 
-func runAnalytics() {
-	activities := activity.ReadActivities("../activities.csv")
+func runAnalytics(activities []activity.Activity) {
 	numDays := statistic.CountUniqueDays(activities)
 	numRuns := len(activities)
 	totalDuration := statistic.CalculateTotalDuration(activities)
