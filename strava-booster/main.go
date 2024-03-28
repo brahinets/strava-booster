@@ -15,9 +15,9 @@ func main() {
 }
 
 func downloadRawData() {
-	weekAgo := time.Now().Add(-time.Duration(24*7) * time.Hour)
+	analyticsStart := time.Date(2023, 8, 30, 0, 0, 0, 0, time.UTC)
 	sessionCookie := os.Getenv("STRAVA_SESSION_TOKEN")
-	activities := download.Activities(weekAgo, sessionCookie)
+	activities := download.Activities(analyticsStart, sessionCookie)
 
 	fmt.Println("Raw Data:", activities)
 }
