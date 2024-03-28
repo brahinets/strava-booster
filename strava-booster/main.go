@@ -2,11 +2,27 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strava-booster/activity"
+	"strava-booster/download"
 	"strava-booster/statistic"
+	"time"
 )
 
 func main() {
+	downloadRawData()
+	runAnalytics()
+}
+
+func downloadRawData() {
+	weekAgo := time.Now().Add(-time.Duration(24*7) * time.Hour)
+	sessionCookie := os.Getenv("strava_session_token")
+	activities := download.Activities(weekAgo, sessionCookie)
+
+	fmt.Println("Raw Data:", activities)
+}
+
+func runAnalytics() {
 	activities := activity.ReadActivities("../activities.csv")
 	numDays := statistic.CountUniqueDays(activities)
 	numRuns := len(activities)
