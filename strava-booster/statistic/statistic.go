@@ -50,16 +50,16 @@ func FindShortestRun(activities []a.Activity) a.Activity {
 	return shortestRun
 }
 
-func FindFarthestRun(activities []a.Activity) a.Activity {
-	var farthestRun a.Activity
-	farthestDistance := 0.0
+func FindLongestRun(activities []a.Activity) a.Activity {
+	var longestRun a.Activity
+	longestDistance := 0.0
 
 	for _, activity := range activities {
-		if activity.Distance > farthestDistance {
-			farthestRun = activity
-			farthestDistance = activity.Distance
+		if activity.Distance > longestDistance {
+			longestRun = activity
+			longestDistance = activity.Distance
 		}
 	}
 
-	return farthestRun
+	return longestRun
 }

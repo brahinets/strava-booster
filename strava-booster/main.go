@@ -27,7 +27,7 @@ func runAnalytics(activities []activity.Activity) {
 	totalDuration := statistic.CalculateTotalDuration(activities)
 	totalDistance := statistic.CalculateTotalDistance(activities)
 	shortestRun := statistic.FindShortestRun(activities)
-	farthestRun := statistic.FindFarthestRun(activities)
+	longestRun := statistic.FindLongestRun(activities)
 
 	fmt.Println("----------------")
 	fmt.Println("# of Days:", numDays)
@@ -35,7 +35,7 @@ func runAnalytics(activities []activity.Activity) {
 	fmt.Println("Total Duration:", totalDuration)
 	fmt.Println("Total Distance:", formatDistance(totalDistance))
 	fmt.Println("Shortest Run:", formatDistance(shortestRun.Distance))
-	fmt.Println("Farthest Run:", formatDistance(farthestRun.Distance))
+	fmt.Println("Longest Run:", formatDistance(longestRun.Distance))
 }
 
 func formatDistance(distanceKilometers float64) string {
