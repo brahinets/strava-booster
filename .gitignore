@@ -1,2 +1,10 @@
 .idea
 .env
+
+*.iml
+
+*.class
+build
+.gradle
+
+*.DS_Store
