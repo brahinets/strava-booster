@@ -48,6 +48,8 @@ class ActivityDownloader(
 
     private fun buildUrl(from: LocalDate, page: Int): String {
         val stravaUrl = "https://www.strava.com/athlete/training_activities"
+        // TODO API does not filter by date anymore. Fetch only needed data
+
         return "$stravaUrl?start_date=${from.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))}&activity_type=Run&per_page=20&page=$page"
     }
 }
