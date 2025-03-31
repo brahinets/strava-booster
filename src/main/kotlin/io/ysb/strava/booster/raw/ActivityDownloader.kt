@@ -26,6 +26,8 @@ class ActivityDownloader(
             val totalPages = (page.total / page.perPage.toDouble()).toInt()
             println("Pages downloaded $currentPage of $totalPages")
 
+            activities.addAll(page.activities)
+
             hasData = currentPage < totalPages
             currentPage++
         }
