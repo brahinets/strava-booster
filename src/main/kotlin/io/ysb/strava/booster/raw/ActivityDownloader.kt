@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.time.LocalDate
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @Service
@@ -28,12 +29,17 @@ class ActivityDownloader(
 
             activities.addAll(page.activities)
 
-            hasData = currentPage < totalPages
+            hasData = currentPage < totalPages && activities.none { notBefore(it, from) }
             currentPage++
         }
 
         return activities
+            .filter { !notBefore(it, from) }
+            .filter { it.activityTypeDisplayName == "Run" }
     }
+
+    private fun notBefore(it: ActivityEntity, from: LocalDate) =
+        it.startDateLocalRaw < from.atStartOfDay().toEpochSecond(ZoneOffset.UTC)
 
     private fun downloadPage(from: LocalDate, page: Int, auth: String): ActivitiesPage {
         val url = buildUrl(from, page)
@@ -50,7 +56,6 @@ class ActivityDownloader(
 
     private fun buildUrl(from: LocalDate, page: Int): String {
         val stravaUrl = "https://www.strava.com/athlete/training_activities"
-        // TODO API does not filter by date anymore. Fetch only needed data
 
         return "$stravaUrl?start_date=${from.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))}&activity_type=Run&per_page=20&page=$page"
     }
