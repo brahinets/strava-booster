@@ -6,9 +6,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Service
 class ActivityDownloader(
@@ -28,14 +30,31 @@ class ActivityDownloader(
             println("Pages downloaded $currentPage of $totalPages")
 
             activities.addAll(page.activities)
+            page.activities.forEach { logActivity(it) }
 
             hasData = currentPage < totalPages && activities.none { notBefore(it, from) }
             currentPage++
         }
 
-        return activities
-            .filter { !notBefore(it, from) }
-            .filter { it.activityTypeDisplayName == "Run" }
+        return activities.filter { !notBefore(it, from) }
+    }
+
+    private fun logActivity(it: ActivityEntity) {
+        val zdt = Instant.ofEpochSecond(it.startDateLocalRaw).atZone(ZoneOffset.UTC)
+        val date = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val day = zdt.format(DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH))
+        println(listOf(
+            it.activityTypeDisplayName,
+            it.name,
+            day,
+            date,
+            zdt.format(DateTimeFormatter.ofPattern("HH:mm")),
+            it.distance,
+            it.elapsedTimeRaw,
+            it.movingTimeRaw,
+            it.elevationGain,
+            it.activityUrl
+        ).joinToString("\t"))
     }
 
     private fun notBefore(it: ActivityEntity, from: LocalDate) =
