@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
 }
 
 fun downloadRawData(context: ApplicationContext): List<ActivityEntity> {
-    val analyticsStart = LocalDate.of(2024, 12, 1)
+    val analyticsStart = LocalDate.of(2023, 8, 30)
     val sessionCookie = System.getenv("STRAVA_SESSION_TOKEN")
     val downloader = context.getBean(ActivityDownloader::class.java)
 
