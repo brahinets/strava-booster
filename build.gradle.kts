@@ -22,7 +22,6 @@ dependencies {
 	implementation(libs.spring.boot.starter)
 	implementation(libs.spring.boot.starter.web)
 	implementation(libs.jackson.module.kotlin)
-	implementation(libs.jackson.datatype.jsr310)
 	implementation(libs.kotlin.reflect)
 	testImplementation(libs.spring.boot.starter.test)
 	testImplementation(libs.kotlin.test.junit5)
