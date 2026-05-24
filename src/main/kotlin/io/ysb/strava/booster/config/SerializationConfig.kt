@@ -3,6 +3,7 @@ package io.ysb.strava.booster.config
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.ext.javatime.ser.LocalDateSerializer
 import tools.jackson.databind.module.SimpleModule
@@ -18,11 +19,14 @@ class SerializationConfig {
 
     @Bean
     fun jsonMapperCustomizer() = JsonMapperBuilderCustomizer { builder ->
-        builder.addModule(
-            SimpleModule("custom-serializers")
-                .addSerializer(LocalDate::class.java, LocalDateSerializer(LOCAL_DATE_FORMATTER))
-                .addSerializer(Duration::class.java, ToStringSerializer(Duration::class.java))
-        )
-        builder.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+        builder
+            .addModule(
+                SimpleModule("custom-serializers")
+                    .addSerializer(LocalDate::class.java, LocalDateSerializer(LOCAL_DATE_FORMATTER))
+                    .addSerializer(Duration::class.java, ToStringSerializer(Duration::class.java))
+            )
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
     }
 }
